@@ -8,7 +8,7 @@ setuptools.setup(
     version="1.0.0",
     author="Hanwen Zuo",
     author_email="HanwenZuo1@gmail.com",
-    description="Distend - targetted word list generator",
+    description="Distend - targeted word list generator",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/not_sponsored/distend",
