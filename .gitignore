@@ -6,3 +6,8 @@
 
 # ignore word list files
 /dct
+
+# ignore build, dist, and egg
+/build
+/dist
+/distend_hanzuo.egg-info

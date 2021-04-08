@@ -7,7 +7,7 @@ import distend.drive as drive
 def serialize_args(multi_rule, verbose, pends):
     """take bool:multi_rule and bool:verbose flag as well as tuple:pends,
     return fncts serialized according to inputs in tuple
-    """"
+    """
     trn_fnct = get_multi_rule(multi_rule)
     fuse_fnct = get_pends(pends[0], pends[1])
     drive_fnct = get_drive(verbose, pends[0], pends[1])
