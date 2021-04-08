@@ -1,16 +1,22 @@
 """Distend - wordlist generator
-
+------
 Usage:
+------
+basic usage:
 
-python3 distend.py infile.txt outfile.txt
+    python3 distend.py infile.txt outfile.txt
 
-python3 distend.py infile.txt outfile.txt -v -c -m
+with verbose, concatenate, multi_rule only flags set as True:
 
-python3 distend.py infile.txt outfile.txt -r 'new_rules.conf'
+    python3 distend.py infile.txt outfile.txt -v -c -m
+
+with non-default rules file:
+
+    python3 distend.py infile.txt outfile.txt -r 'new_rules.conf'
 
 Contact:
 
-- developer email: hanzuo123@gmail.com
+- developer email: HanwenZuo1@gmail.com
 
 """
 # standard library

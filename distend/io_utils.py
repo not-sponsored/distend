@@ -1,7 +1,6 @@
 """input/output utilities to read and display data"""
 
 # TODO potentially write an custom error class
-# TODO maybe check for file collision to prevent overwriting in create_wordlist?
 
 # standard library
 import os
@@ -90,7 +89,7 @@ def file_exists(test_file):
 
 def create_wordlist(infile, outfile, concat=False):
     """given str:infile, str:outfile and bool:concat creates a new file for the
-    wordlist, returns str:infile unmodified if infile != outfile
+    wordlist, return str:infile unmodified if infile != outfile
     """
     # check infile != outfile because cannot perform read/write on same file
     if infile == outfile:
@@ -121,6 +120,7 @@ def create_wordlist(infile, outfile, concat=False):
     return outfile
 
 def read_file_generator(infile):
+    """given str:infile, return a generator of the file"""
     try:
         for line in open(infile, 'r'):
             yield line
@@ -130,7 +130,7 @@ def read_file_generator(infile):
         raise SystemExit(f'ERROR: {other}')
 
 def append_list(lines, outfile):
-    """takes a lst:lines and str:outfile, appends to outfile returns nothing"""
+    """take lst:lines and str:outfile, append to outfile return nothing"""
     try:
         with open(outfile, 'a') as f:
             f.write('\n'.join(lines) + '\n')
@@ -150,6 +150,7 @@ def rename_file(tempfile, rn_file):
         raise SystemExit(f"ERROR temp file {tempfile} move to {rn_file} failed")
 
 def generator_file_check(infile):
+    """given str:infile, check if infile exists either return bool or exit"""
     if file_exists(infile):
         return True
     else:
@@ -157,7 +158,7 @@ def generator_file_check(infile):
 
 def banner_title(vrsn):
     """special thanks to textkool.com for the ascii text
-    takes a str:vrsn, returns a string of ascii art and version number
+    take a str:vrsn, return a string of ascii art and version number
     """
     banner = '''
     ██████╗ ██╗███████╗████████╗███████╗███╗   ██╗██████╗

@@ -1,8 +1,12 @@
 """Distend - build small targeted wordlists from an existing wordlist
 
-# insert example usage here
+Import example for the 'io_utils' module:
 
-See https://github.com/hanzuo123/munch for more details"""
+    >>> from io_utils import is_comment
+    >>> is_comment('# This is a comment')
+    True
+
+See https://github.com/not-sponsored/distend for full source"""
 
 # Distend version
 __version__ = '1.0.0'
@@ -24,18 +28,3 @@ from .modifier import (
     fuse_np_lp,
     fuse_np_sp,
 )
-
-'''from .io_utils import (
-    reduce_list,
-    is_comment,
-    rule_reader,
-    pp_reader,
-    duplicate_check,
-    unique_file_name,
-    file_exists,
-    create_wordlist,
-    append_list,
-    append_str,
-    rename_file,
-    banner_title
-)'''
