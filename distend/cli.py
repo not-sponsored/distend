@@ -72,7 +72,7 @@ def parser(args):
                         help='display more information as program runs')
     parser.add_argument('-r', '--rules_file', default=None,
                         help='specify location of alternate rules file, default\
-                        file is rules.conf in program directory')
+                        file is rules.conf included with package')
     parser.add_argument('-m', '--multi_rule_only', action='store_true',
                         default=False, help='only apply multiple rules at once\
                         single substitutions skipped i.e.\
