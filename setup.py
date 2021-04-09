@@ -11,7 +11,7 @@ setuptools.setup(
     description="Distend - targeted word list generator",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/not_sponsored/distend",
+    url="https://github.com/not-sponsored/distend",
     packages=setuptools.find_packages(),
     include_package_data=True,
     package_data={'': ['rules.conf']},
