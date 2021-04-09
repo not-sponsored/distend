@@ -40,6 +40,7 @@ pip install distend
 ```
 
 Distend is supported on Python 3.6 and above.
+
 -----
 ## Usage
 
