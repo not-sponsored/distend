@@ -22,6 +22,7 @@ def rule_reader(rules_file, verbose=False):
     if not rules_file:
         path = 'rules.conf'
         rules_file = pkg_resources.resource_filename(__name__, path)
+        print(f'default rules file: {rules_file}')
     rules = {}
     try:
         with open(rules_file, 'r') as f:

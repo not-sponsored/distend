@@ -4,15 +4,15 @@ Usage:
 ------
 basic usage:
 
-    python3 distend.py infile.txt outfile.txt
+    distend infile.txt outfile.txt
 
 with verbose, concatenate, multi_rule only flags set as True:
 
-    python3 distend.py infile.txt outfile.txt -v -c -m
+    distend infile.txt outfile.txt -v -c -m
 
 with non-default rules file:
 
-    python3 distend.py infile.txt outfile.txt -r 'new_rules.conf'
+    distend infile.txt outfile.txt -r 'new_rules.conf'
 
 Contact:
 

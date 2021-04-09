@@ -40,7 +40,7 @@ python3 distend.py infile.txt outfile.txt
 -----
 ## Development setup
 
-To run the unittests, navigate to the test directory and run the following
+To run the unit tests, navigate to the test directory and run the following
 
 ```sh
 python3 -m unittest test_modifier.py
