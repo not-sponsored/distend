@@ -13,7 +13,7 @@ information view the LICENSE on the github repository linked above.
 """
 
 # Distend version
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 # allow tests to run
 from .modifier import (
