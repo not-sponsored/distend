@@ -16,17 +16,17 @@ The fan finally whirred to a stop as the sun peeked over the horizon. After crac
 
 If you have a good word list, and you have some extra details surrounding the password in question such as
 
--Date of birth
--Mother's maiden name
--Pet names
--Age
--Address
--Other important dates
--Favorite words
--Business specific terms
--Favorite foods
--Catch phrases
--etc
+- Date of birth
+- Mother's maiden name
+- Pet names
+- Age
+- Address
+- Other important dates
+- Favorite words
+- Business specific terms
+- Favorite foods
+- Catch phrases
+- etc
 
 then Distend is for you. It can even implement common leet speak substitutions as well!
 
