@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="distend_hanzuo",
+    name="distend",
     version="1.0.0",
     author="Hanwen Zuo",
     author_email="HanwenZuo1@gmail.com",

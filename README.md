@@ -12,18 +12,34 @@
 </pre>
 </div>
 
-After cracking an entire night without avail, I decided to write a script to aid me on my hash cracking journey. Because this challenge was from a ctf, I had some knowledge about the password in question including a name, date, and favorite animal; however, I could not find a simple solution that would allow me to generate a targeted word list by modifying an existing generic list with the extra details. Thus, distend was born. Because the script is written in python, I think the name distend is quite fitting.
+The fan finally whirred to a stop as the sun peeked over the horizon. After cracking an entire night, my tired laptop had given up. Wiping the sleep from my eyes, I noted that 0 hashes were cracked. I was frustrated because I knew some details about the password behind the hash, but I could not find a simple solution that would allow me to generate a targeted word list by modifying an existing generic list with the extra details. Thus, Distend was born.
+
+If you have a good word list, and you have some extra details surrounding the password in question such as
+
+-Date of birth
+-Mother's maiden name
+-Pet names
+-Age
+-Address
+-Other important dates
+-Favorite words
+-Business specific terms
+-Favorite foods
+-Catch phrases
+-etc
+
+then Distend is for you. It can even implement common leet speak substitutions as well!
 
 -----
 ## Installation
 
-You can install the package from PyPi using pip or directly clone the repository with the green button above.
+You can install the package from PyPi using pip or directly clone the repository.
 
 ```sh
 pip install distend
 ```
 
-The script is supported on Python 3.6 and above.
+Distend is supported on Python 3.6 and above.
 -----
 ## Usage
 

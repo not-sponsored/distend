@@ -6,7 +6,11 @@ Import example for the 'io_utils' module:
     >>> is_comment('# This is a comment')
     True
 
-See https://github.com/not-sponsored/distend for full source"""
+See https://github.com/not-sponsored/distend for source, license, and tests.
+
+Disclaimer: please refrain from malicious use of the software. For more
+information view the LICENSE on the github repository linked above.
+"""
 
 # Distend version
 __version__ = '1.0.0'
