@@ -117,7 +117,7 @@ def create_wordlist(infile: str, outfile: str, concatenate=False) -> str:
             print(f'[!] WARNING file already exists: {outfile}')
             overwrite = str(input(f'overwrite with new {outfile} (Y/N)? '))
             if overwrite.upper() == 'Y' or overwrite.upper() == 'YES':
-                pass               # another function will overwrite
+                open(outfile, 'w').close()           # erase contents
             else:
                 raise SystemExit()
         except:
