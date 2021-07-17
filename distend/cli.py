@@ -26,36 +26,34 @@ import time
 
 # internal distend imports
 import distend.__init__
-import distend.serializer as serializer
-import distend.io_utils as iou
+import distend.serializer
+import distend.io_utils
 
 def main():
     """generate the wordlist return nothing"""
-    # start timer + args + banner
-    start_time = time.perf_counter()
-    args = parser(sys.argv[1:])
-    print(f'{iou.banner_title(distend.__init__.__version__)}\n')
+    start_time = time.perf_counter()                          # start timer
+    args = parser(sys.argv[1:])                               # parse arguments
+    print(f'{distend.io_utils.banner_title(distend.__init__.__version__)}\n')
 
-    # run checks, parse rules and pends, get file generator, create outfile
-    iou.generator_file_check(args.infile)
-    rules = iou.rule_reader(args.rules_file, args.verbose)
-    pends = iou.pp_reader(args.rules_file, args.verbose)
-    read_gen = iou.read_file_generator(args.infile)
-    dupe = iou.create_wordlist(args.infile, args.outfile, args.concatenate)
+    distend.io_utils.generator_file_check(args.infile)          # check infile
+    rules = distend.io_utils.rule_reader(args.rules_file, args.verbose)
+    pre_postpend = distend.io_utils.pre_post_reader(args.rules_file,
+                        args.verbose)                 # (prepend, postpend)
+    lines = distend.io_utils.read_file_generator(args.infile)
+    output = distend.io_utils.create_wordlist(args.infile, args.outfile,
+                                              args.concatenate)
 
-    # serialize options into tuple + call drive + display success message
-    fncts = serializer.serialize_args(args.multi_rule_only, args.verbose,
-                                      pends)
-    fncts[2](read_gen, fncts[:2], rules, pends, dupe)
-    print(f'\n=> Generated wordlist at {dupe}')
+    translation, fuse, drive = distend.serializer.serialize_args(
+            args.multi_rule_only, args.verbose, pre_postpend)
+    drive(lines, (translation, fuse), rules, pre_postpend, output)
+    print(f'\n[*] => Generated wordlist at {output}')
 
-    # if duplicate file exists, attempts to move dupe to original outfile
-    if args.outfile != dupe:
-        iou.rename_file(dupe, args.outfile)
+    if args.outfile != output:         # moves temporary file to original outfile
+        distend.io_utils.rename_file(output, args.outfile)
 
     # show elapsed time
     end_time = time.perf_counter()
-    print(f'Elapsed time: {end_time - start_time:0.3f}s')
+    print(f'[*] Elapsed time: {end_time - start_time:0.3f}s')
 
 def parser(args):
     """parse arguments with lst:args return lst"""
