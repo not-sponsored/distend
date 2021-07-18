@@ -8,7 +8,7 @@ from typing import Tuple, Callable
 
 # change function definition
 def serialize_args(multi_rule: bool, verbose: bool,
-                   prepend, postpend) -> Tuple[Callable, Callable, Callable]:
+                   prepend, postpend) -> Tuple[Callable, Callable]:
     """takes bool:multi_rule, bool:verbose flag, prepend, postpend
     note that prepend and postpend could be either a list or str,
     return a tuple of (transform, fuse) functions
@@ -25,7 +25,7 @@ def get_multi_rule_function(multi_rule: bool) -> Callable:
     else:
         return distend.modifier.single_transform
 
-# may change depending on modifier, name change
+# name change
 def get_pre_postpend_function(prepend, postpend) -> Callable:
     """given pre and postpends, return fuse function from modifier"""
     attributes = (
@@ -35,14 +35,14 @@ def get_pre_postpend_function(prepend, postpend) -> Callable:
         isinstance(postpend, list)
     )
     fuse_function_lookup = {
-        (1,1,1,1): distend.modifier.fuse_lp_lp,
-        (1,1,1,0): distend.modifier.fuse_lp_sp,
-        (1,1,0,1): distend.modifier.fuse_sp_lp,
-        (1,1,0,0): distend.modifier.fuse_sp_sp,
-        (1,0,1,0): distend.modifier.fuse_lp_np,
-        (1,0,0,0): distend.modifier.fuse_sp_np,
-        (0,1,0,1): distend.modifier.fuse_np_lp,
-        (0,1,0,0): distend.modifier.fuse_np_sp,
+        (1,1,1,1): distend.modifier.fuse_list_prepend_list_postpend,
+        (1,1,1,0): distend.modifier.fuse_list_prepend_str_postpend,
+        (1,1,0,1): distend.modifier.fuse_str_prepend_list_postpend,
+        (1,1,0,0): distend.modifier.fuse_str_prepend_str_postpend,
+        (1,0,1,0): distend.modifier.fuse_list_prepend_no_postpend,
+        (1,0,0,0): distend.modifier.fuse_str_prepend_no_postpend,
+        (0,1,0,1): distend.modifier.fuse_no_prepend_list_postpend,
+        (0,1,0,0): distend.modifier.fuse_no_prepend_str_postpend,
         (0,0,0,0): None
     }
     return fuse_function_lookup.get(attributes, None)

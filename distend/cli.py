@@ -84,7 +84,7 @@ def main(passed_arguments: list=None) -> None:
     """end new code"""
     print(f'\n[*] => Generated wordlist at {output}')
 
-    if args.outfile != output:       # moves temporary file to original outfile
+    if args.outfile != output:       # renames temporary file to outfile
         distend.io_utils.rename_file(output, args.outfile)
 
     end_time = time.perf_counter()  # end timer

@@ -9,7 +9,7 @@ from unittest.mock import patch, mock_open
 # internal distend imports
 from distend import io_utils
 
-class Test_io_utils(unittest.TestCase):
+class TestIoUtils(unittest.TestCase):
 
     def setUp(self):
         # example file configurations

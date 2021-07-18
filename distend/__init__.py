@@ -13,22 +13,22 @@ information view the LICENSE on the github repository linked above.
 """
 
 # Distend version
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 
 # allow tests to run
 from .modifier import (
-    pre_list,
-    post_list,
-    pre_str,
-    post_str,
+    prepend_list,
+    postpend_list,
+    prepend_str,
+    postpend_str,
     multi_transform,
     single_transform,
-    fuse_lp_lp,
-    fuse_lp_sp,
-    fuse_sp_lp,
-    fuse_sp_sp,
-    fuse_lp_np,
-    fuse_sp_np,
-    fuse_np_lp,
-    fuse_np_sp,
+    fuse_list_prepend_list_postpend,
+    fuse_list_prepend_str_postpend,
+    fuse_str_prepend_list_postpend,
+    fuse_str_prepend_str_postpend,
+    fuse_list_prepend_no_postpend,
+    fuse_str_prepend_no_postpend,
+    fuse_no_prepend_list_postpend,
+    fuse_no_prepend_str_postpend,
 )
