@@ -30,12 +30,14 @@ def is_comment(line: str) -> bool:
     """checks for '#' as first char in str:line, returns a bool"""
     return line.strip().startswith('#')
 
-def rule_reader(rules_file: str, verbose: bool=False) -> Dict[str, str]:
+# add parameter out_stream
+def rule_reader(rules_file: str, verbose: bool=False,
+                out_stream=None) -> Dict[str, str]:
     """given a file location str:rules_file, returns a dict:rules"""
     rules: Dict[str, str] = {}
     if not rules_file:
         rules_file = files('distend').joinpath('rules.conf') # default location
-        print(f'[+] default rules file: {rules_file}')
+        print(f'[+] default rules file: {rules_file}', file=out_stream)
     try:
         with open(rules_file, 'r') as f:
             for line in f:
@@ -51,7 +53,7 @@ def rule_reader(rules_file: str, verbose: bool=False) -> Dict[str, str]:
     except Exception as other:
         raise SystemExit(f'[!] Error: {other}')
     if verbose:                                  # extra verbosity
-        print(f'[+] substitution rules from {rules_file}: {rules}')
+        print(f'[*] substitution rules from {rules_file}: {rules}')
     return rules
 
 def pre_post_reader(rules_file: str, verbose: bool=False) -> tuple:
@@ -81,8 +83,8 @@ def pre_post_reader(rules_file: str, verbose: bool=False) -> tuple:
     prepend = reduce_list(prepend)          # turns single element list to str
     postpend = reduce_list(postpend)
     if verbose:                             # extra verbosity
-        print(f'[+] prepend(s) from {rules_file}: {prepend}')
-        print(f'[+] postpend(s) from {rules_file}: {postpend}')
+        print(f'[*] prepend(s) from {rules_file}: {prepend}')
+        print(f'[*] postpend(s) from {rules_file}: {postpend}')
     return prepend, postpend
 
 def unique_file_name(file_name: str, cnt: int) -> str:
@@ -93,10 +95,12 @@ def file_exists(test_file: str) -> bool:
     """checks if file location str:test_file exists, returns a bool"""
     return os.path.exists(test_file)
 
-def create_wordlist(infile: str, outfile: str, concatenate=False) -> str:
+def create_wordlist(infile: str, outfile: str, concatenate: bool=False) -> str:
     """given str:infile, str:outfile and bool:concatenate creates a new file for
     the wordlist, returns str:infile unmodified if infile is not outfile
     """
+    if outfile == 'None':  # printing to stdout no need for a file
+        return None
     # check infile != outfile because cannot perform read/write on same file
     if infile == outfile:
         file_name = outfile.split('.')[0]             # removes file extension
@@ -134,6 +138,7 @@ def read_file_generator(infile: str) -> Generator[str, None, None]:
     except Exception as other:
         raise SystemExit(f'[!] ERROR: {other}')
 
+# feel like there is something I could do with the outstream in print
 # add an option for standard out in cli
 def append_list(lines: List[str], outfile: str) -> None:
     """takes lst:lines and str:outfile, append to outfile return nothing
@@ -151,6 +156,8 @@ def rename_file(temp_file: str, rn_file: str) -> None:
     """takes str:tempfile and str:rn_file then moves temp_file to rn_file
     returns nothing
     """
+    if temp_file is None:  # no file to move temp_file is None
+        return
     try:
         warning = f'[!] WARNING: overwrite {rn_file} with {temp_file} (Y/N)? '
         overwrite = str(input(warning))
