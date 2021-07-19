@@ -127,6 +127,7 @@ def create_wordlist(infile: str, outfile: str, concatenate: bool=False,
             overwrite = str(input(f'overwrite with new {outfile} (Y/N)? '))
             if overwrite.upper() == 'Y' or overwrite.upper() == 'YES' or force:
                 open(outfile, 'w').close()           # erase contents
+                print('kept running')
             else:
                 raise SystemExit()
         except:

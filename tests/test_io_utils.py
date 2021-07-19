@@ -5,6 +5,7 @@ sys.path.append('..')
 # standard library
 import unittest
 from unittest.mock import patch, mock_open
+import os
 
 # internal distend imports
 from distend import io_utils
@@ -141,9 +142,11 @@ class TestIoUtils(unittest.TestCase):
 
     def test_rule_reader_single_rule_and_no_rule(self):
         """io_utils.rule_reader parses, returns a dictionary"""
-        with patch("builtins.open", mock_open(read_data=self.single_rule)) as mock_file:
+        with patch("builtins.open",
+                   mock_open(read_data=self.single_rule)) as mock_file:
                 single_result = io_utils.rule_reader(None)
-        with patch("builtins.open", mock_open(read_data=self.no_rule)) as mock_file:
+        with patch("builtins.open",
+                   mock_open(read_data=self.no_rule)) as mock_file:
                 no_rule_result = io_utils.rule_reader(None)
         self.assertIsInstance(single_result, dict, 'does return a dictionary')
         self.assertIsInstance(no_rule_result, dict, 'does return a dictionary')
@@ -151,6 +154,20 @@ class TestIoUtils(unittest.TestCase):
                          'does not parse the rules correctly')
         self.assertEqual(no_rule_result, {},
                          'does not parse the rules correctly')
+
+    @patch('builtins.print')
+    def test_rule_reader_default_reminder_and_out_stream(self, mock_print):
+        """io_utils.rule_reader test output of default reminder"""
+        blank_stream = open(os.devnull, 'w')  # open stream to devnull
+        default_location = os.getcwd() + '/../distend/rules.conf'
+        default_call = f'[+] default rules file: {default_location}'
+        silent_call = f'[+] default rules file: {default_location}'
+        with patch("builtins.open", mock_open(read_data=self.file)) as default:
+                result = io_utils.rule_reader(None)
+                mock_print.assert_called_with(default_call, file=None)
+        with patch("builtins.open", mock_open(read_data=self.file)) as silent:
+                silent_result = io_utils.rule_reader(None, False, blank_stream)
+                mock_print.assert_called_with(silent_call, file=blank_stream)
 
     def test_pre_post_reader_parses_single_prepend_and_postpend(self):
         """io_utils.pre_post_reader parses file,
@@ -168,7 +185,8 @@ class TestIoUtils(unittest.TestCase):
         """io_utils.pre_post_reader parses,
         returns tuple:(list:prepends, list:postpends)
         """
-        with patch("builtins.open", mock_open(read_data=self.list_pre_postpend)) as mock_file:
+        with patch("builtins.open",
+                   mock_open(read_data=self.list_pre_postpend)) as mock_file:
                 result = io_utils.pre_post_reader(None)
         self.assertIsInstance(result, tuple, 'does return a tuple')
         self.assertIsInstance(result[0], list, 'element zero is not a list')
@@ -180,9 +198,11 @@ class TestIoUtils(unittest.TestCase):
         """io_utils.pre_post_reader parses,
         returns tuple:(str:prepends, str:postpends)
         """
-        with patch("builtins.open", mock_open(read_data=self.blank_pre_postpend)) as mock_file:
+        with patch("builtins.open",
+                   mock_open(read_data=self.blank_pre_postpend)) as mock_file:
                 blank_result = io_utils.pre_post_reader(None)
-        with patch("builtins.open", mock_open(read_data=self.no_pre_postpend)) as mock_file:
+        with patch("builtins.open",
+                   mock_open(read_data=self.no_pre_postpend)) as mock_file:
                 no_result = io_utils.pre_post_reader(None)
         self.assertIsInstance(blank_result, tuple, 'does return a tuple')
         self.assertIsInstance(blank_result[0], str,
@@ -251,6 +271,24 @@ class TestIoUtils(unittest.TestCase):
         self.assertEqual(result, mock_copy.return_value,
                          'failed to cat and return the correct outfile name')
 
+    @patch('builtins.open')
+    def test_create_wordlist_throws_FileExistsError(self, mock_open):
+        """io_utils.create_wordlist handles FileExistsError"""
+        infile = 'unique.txt'
+        outfile = 'out.txt'
+        verbose = False
+        force = True
+        mock_open.side_effect = [FileExistsError, mock_open.DEFAULT]
+        with patch('builtins.input', return_value='y'):
+            result = io_utils.create_wordlist(infile, outfile)
+            mock_open.assert_called_with(outfile, 'w')
+        mock_open.reset_mock()
+        mock_open.side_effect = [FileExistsError, mock_open.DEFAULT]
+        with patch('builtins.input', return_value='blank_answer'):
+            result = io_utils.create_wordlist(infile, outfile, verbose, force)
+            mock_open.assert_called_with(outfile, 'w')
+
+
     def test_read_file_generator_works(self):
         """io_utils.read_file_generator works and returns a generator"""
         infile = 'unique.txt'
@@ -266,7 +304,7 @@ class TestIoUtils(unittest.TestCase):
     def test_append_list(self):
         """io_utils.append_list returns nothing and writes to file"""
         lines = ['first', 'second']
-        single_element = ['first']
+        single_element = ['sin']
         outfile = 'out.txt'
         with patch('builtins.open', mock_open()) as mock_file:
             io_utils.append_list(lines, outfile)
@@ -275,7 +313,7 @@ class TestIoUtils(unittest.TestCase):
         mock_file.assert_called_once_with(outfile, 'a')
         single_element_mock.assert_called_once_with(outfile, 'a')
         mock_file.return_value.write.assert_called_once_with('first\nsecond\n')
-        single_element_mock.return_value.write.assert_called_once_with('first\n')
+        single_element_mock.return_value.write.assert_called_once_with('sin\n')
 
     @patch('builtins.print')
     def test_append_list_stdout(self, mock_print):
@@ -293,8 +331,13 @@ class TestIoUtils(unittest.TestCase):
         temp_file = 'duplicate_wordlist(1).txt'
         rn_file = 'renamed.txt'
         mock_move.return_value = rn_file
+        force = True
         with patch('builtins.input', return_value='y'):
             io_utils.rename_file(temp_file, rn_file)
+            mock_move.assert_called_once_with(temp_file, rn_file)
+        mock_move.reset_mock()
+        with patch('builtins.input', return_value='blank_answer'):
+            io_utils.rename_file(temp_file, rn_file, force)
             mock_move.assert_called_once_with(temp_file, rn_file)
 
     def test_generator_file_check(self):
