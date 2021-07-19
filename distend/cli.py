@@ -110,8 +110,6 @@ def main(passed_arguments: list=[]) -> None:
             f'\n in {end_time - start_time:0.3f} seconds')
     print(stats, file=OUT_STREAM)
 
-# maybe add new argument for the separator
-# add mode for quiet
 def parser(args: list):
     """parse arguments with lst:args return lst"""
     parser = argparse.ArgumentParser(description='distend - generate a\

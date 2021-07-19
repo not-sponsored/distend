@@ -100,7 +100,10 @@ def create_wordlist(infile: str, outfile: str, concatenate: bool=False) -> str:
     the wordlist, returns str:infile unmodified if infile is not outfile
     """
     if outfile == 'None':  # printing to stdout no need for a file
-        return None
+        if concatenate:
+            with open(infile, 'r') as f:
+                print(f.read())
+        return
     # check infile != outfile because cannot perform read/write on same file
     if infile == outfile:
         file_name = outfile.split('.')[0]             # removes file extension
