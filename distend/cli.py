@@ -55,7 +55,7 @@ def main(passed_arguments: list=[]) -> None:
                                                          args.verbose)
     lines = distend.io_utils.read_file_generator(args.infile)
     output = distend.io_utils.create_wordlist(args.infile, args.outfile,
-                                              args.concatenate)
+                                              args.concatenate, args.force)
 
     transform, fuse = distend.serializer.serialize_args(args.multi_rule_only,
                             args.verbose, prepend, postpend)
@@ -94,7 +94,7 @@ def main(passed_arguments: list=[]) -> None:
     print(f'\n[*] => Generated wordlist at {output}', file=OUT_STREAM)
 
     if args.outfile != output:       # renames temporary file to outfile
-        distend.io_utils.rename_file(output, args.outfile)
+        distend.io_utils.rename_file(output, args.outfile, args.force)
 
     end_time = time.perf_counter()  # end timer
     number_of_prepends = number_of_postpends = 0  # assume no pre or postpends
@@ -133,6 +133,8 @@ def parser(args: list):
                         password -> p@ssword -> p@ssw0rd')
     parser.add_argument('-s', '--separator', default='',
                         help='separator between pre and postpends with base')
+    parser.add_argument('-f', '--force', action='store_true', default=False,
+                        help='force answer yes to every prompt')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-v', '--verbose', action='store_true', default=False,
                         help='display more information as program runs')

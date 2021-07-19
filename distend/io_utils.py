@@ -95,7 +95,9 @@ def file_exists(test_file: str) -> bool:
     """checks if file location str:test_file exists, returns a bool"""
     return os.path.exists(test_file)
 
-def create_wordlist(infile: str, outfile: str, concatenate: bool=False) -> str:
+# add parameter force
+def create_wordlist(infile: str, outfile: str, concatenate: bool=False,
+                    force: bool=False) -> str:
     """given str:infile, str:outfile and bool:concatenate creates a new file for
     the wordlist, returns str:infile unmodified if infile is not outfile
     """
@@ -123,7 +125,7 @@ def create_wordlist(infile: str, outfile: str, concatenate: bool=False) -> str:
         except FileExistsError:
             print(f'[!] WARNING file already exists: {outfile}')
             overwrite = str(input(f'overwrite with new {outfile} (Y/N)? '))
-            if overwrite.upper() == 'Y' or overwrite.upper() == 'YES':
+            if overwrite.upper() == 'Y' or overwrite.upper() == 'YES' or force:
                 open(outfile, 'w').close()           # erase contents
             else:
                 raise SystemExit()
@@ -155,7 +157,8 @@ def append_list(lines: List[str], outfile: str) -> None:
     except:
         raise SystemExit(f'[!] ERROR could not append list to {outfile}')
 
-def rename_file(temp_file: str, rn_file: str) -> None:
+# add parameter force
+def rename_file(temp_file: str, rn_file: str, force: bool=False) -> None:
     """takes str:tempfile and str:rn_file then moves temp_file to rn_file
     returns nothing
     """
@@ -164,7 +167,7 @@ def rename_file(temp_file: str, rn_file: str) -> None:
     try:
         warning = f'[!] WARNING: overwrite {rn_file} with {temp_file} (Y/N)? '
         overwrite = str(input(warning))
-        if overwrite.upper() == 'Y' or overwrite.upper() == 'YES':
+        if overwrite.upper() == 'Y' or overwrite.upper() == 'YES' or force:
             shutil.move(temp_file, rn_file)
             print(f'[!] Renamed {temp_file} to {rn_file}')
     except:
