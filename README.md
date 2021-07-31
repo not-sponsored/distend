@@ -38,9 +38,10 @@ You can install the package from PyPi using pip
 pip install distend
 ```
 
-or you can directly clone the repository then run the setup
+or you can directly clone the repository then install locally
 
 ```sh
+git clone [url_from_code_button_above]
 cd [your_clone_location]
 pip install .
 ```
@@ -56,7 +57,7 @@ Basic Usage
 distend infile.txt outfile.txt
 ```
 
-For more details use the help flag
+For more details and options use the help flag
 
 ```sh
 distend -h
