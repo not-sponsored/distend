@@ -1,11 +1,8 @@
-# workaround
-import sys
-sys.path.append('..')
-
 # standard library
 import unittest
 from unittest.mock import patch, mock_open
 import os
+os.chdir('..')  # changes location for default configuration file tests
 
 # internal distend imports
 from distend import io_utils
@@ -13,30 +10,30 @@ from distend import io_utils
 class TestIoUtils(unittest.TestCase):
 
     def setUp(self):
-        # example file configurations
+        # configuration file test setups
         self.file = """
-                      # rules
+                      # replacements
                       a = 4
                       e = 3
                       # prepend
                       prepend, 1972
                       # postpend
                       postpend, 1984"""
-        self.single_rule = """
-                              # rules
+        self.single_replace = """
+                              # replacements
                               a = 4
                               # prepend
                               prepend, 1972
                               # postpend
                               postpend, 1984"""
-        self.no_rule = """
-                          # rules
+        self.no_replace = """
+                          # replacements
                           # prepend
                           prepend, 1972
                           # postpend
                           postpend, 1984"""
         self.list_pre_postpend = """
-                                    # rules
+                                    # replacements
                                     a = 4
                                     e = 3
                                     # prepend
@@ -44,7 +41,7 @@ class TestIoUtils(unittest.TestCase):
                                     # postpend
                                     postpend, 1984, 1985"""
         self.blank_pre_postpend = """
-                                     # rules
+                                     # replacements
                                      a = 4
                                      e = 3
                                      # prepend
@@ -52,38 +49,60 @@ class TestIoUtils(unittest.TestCase):
                                      # postpend
                                      postpend,"""
         self.no_pre_postpend = """
-                                  # rules
+                                  # replacements
                                   a = 4
                                   e = 3
                                   # prepend
                                   # postpend"""
+        self.removal_replace = """
+                                 # replacements
+                                 a =
+                                 """
+        self.malformed_pre_postpend = """
+                                         # prepend, postpend
+                                         prepend,, ,
+                                         postpend, , 1984,,1985"""
 
     def test_reduce_list_maintains_list(self):
         """io_utils.reduce_list returns a list given a list"""
         input = ['1984', '1985']
+        empty_inputs = ['', '1984', '', '1985', '', '']
         result = io_utils.reduce_list(input)
+        empty_result = io_utils.reduce_list(empty_inputs)
         self.assertIsInstance(result, list, 'does not return datatype list')
+        self.assertIsInstance(empty_result, list,
+                              'does not return datatype list')
         self.assertEqual(result, input, 'does not maintain list')
+        self.assertEqual(empty_result, input, 'does not maintain list')
 
     def test_reduce_list_reduces_to_str(self):
         """io_utils.reduce_list returns a str given a single element"""
         single_element_input = ['1984']
         no_element_input = ['']
         default_input = ''
+        multiple_empty = ['', '']
+        empty_and_single = ['', '1984', '']
         single_element_result = io_utils.reduce_list(single_element_input)
         no_element_result = io_utils.reduce_list(no_element_input)
         default_input_result = io_utils.reduce_list(default_input)
+        multiple_empty_result = io_utils.reduce_list(multiple_empty)
+        empty_single_result = io_utils.reduce_list(empty_and_single)
         self.assertIsInstance(single_element_result, str,
                               'does not return datatype str')
         self.assertIsInstance(no_element_result, str,
                               'does not return datatype str')
         self.assertIsInstance(default_input_result, str,
                               'does not return datatype str')
+        self.assertIsInstance(multiple_empty_result, str,
+                              'does not return datatype str')
+        self.assertIsInstance(empty_single_result, str,
+                              'does not return datatype str')
         self.assertEqual(single_element_result, '1984',
                          'does not reduce to str')
-        self.assertEqual(no_element_result, '',
-                         'does not reduce to str')
-        self.assertEqual(default_input_result, '',
+        self.assertEqual(no_element_result, '', 'does not reduce to str')
+        self.assertEqual(default_input_result, '', 'does not reduce to str')
+        self.assertEqual(multiple_empty_result, '', 'does not reduce to str')
+        self.assertEqual(empty_single_result, '1984',
                          'does not reduce to str')
 
     def test_is_comment_identifies_comment(self):
@@ -111,99 +130,126 @@ class TestIoUtils(unittest.TestCase):
         """io_utils.is_comment does not catch regular text, returns false"""
         line = 'This is a regular line'
         prepend_line = 'prepend, 1984, 1985'
-        rule_line = 'a = 4'
+        replacement_line = 'a = 4'
         false_comment = 'This is not a comment # other text'
         result = io_utils.is_comment(line)
         prepend_result = io_utils.is_comment(prepend_line)
-        rule_result = io_utils.is_comment(rule_line)
+        replacement_result = io_utils.is_comment(replacement_line)
         false_comment_result = io_utils.is_comment(false_comment)
         self.assertIsInstance(result, bool, 'does not return datatype bool')
         self.assertIsInstance(prepend_result, bool,
                               'does not return datatype bool')
-        self.assertIsInstance(rule_result, bool,
+        self.assertIsInstance(replacement_result, bool,
                               'does not return datatype bool')
         self.assertIsInstance(false_comment_result, bool,
                               'does not return datatype bool')
         self.assertEqual(result, False, 'incorrectly catches regular text')
         self.assertEqual(prepend_result, False,
                          'incorrectly catches regular text')
-        self.assertEqual(rule_result, False,
+        self.assertEqual(replacement_result, False,
                          'incorrectly catches regular text')
         self.assertEqual(false_comment_result, False,
                          'incorrectly catches regular text')
 
-    def test_rule_reader_parses_rules(self):
-        """io_utils.rule_reader parses rules, returns rules in a dictionary"""
-        with patch("builtins.open", mock_open(read_data=self.file)) as mock_file:
-                result = io_utils.rule_reader(None)
+    def test_read_replacements_parses_replacements(self):
+        """io_utils.read_replacements parses replacements,
+        returns replacements in a dictionary
+        """
+        with patch("builtins.open",
+                   mock_open(read_data=self.file)) as mock_file:
+                result = io_utils.read_replacements(None)
         self.assertIsInstance(result, dict, 'does return a dictionary')
         self.assertEqual(result, {'a':'4', 'e':'3'},
-                         'does not parse the rules correctly')
+                         'does not parse the replacements correctly')
 
-    def test_rule_reader_single_rule_and_no_rule(self):
-        """io_utils.rule_reader parses, returns a dictionary"""
+    def test_read_replacements_single_replace_and_no_replace(self):
+        """io_utils.read_replacements parses, returns a dictionary"""
         with patch("builtins.open",
-                   mock_open(read_data=self.single_rule)) as mock_file:
-                single_result = io_utils.rule_reader(None)
+                   mock_open(read_data=self.single_replace)) as mock_file:
+                single_result = io_utils.read_replacements(None)
         with patch("builtins.open",
-                   mock_open(read_data=self.no_rule)) as mock_file:
-                no_rule_result = io_utils.rule_reader(None)
+                   mock_open(read_data=self.no_replace)) as mock_file:
+                no_replace_result = io_utils.read_replacements(None)
         self.assertIsInstance(single_result, dict, 'does return a dictionary')
-        self.assertIsInstance(no_rule_result, dict, 'does return a dictionary')
+        self.assertIsInstance(no_replace_result, dict,
+                              'does return a dictionary')
         self.assertEqual(single_result, {'a':'4'},
-                         'does not parse the rules correctly')
-        self.assertEqual(no_rule_result, {},
-                         'does not parse the rules correctly')
+                         'does not parse the replacements correctly')
+        self.assertEqual(no_replace_result, {},
+                         'does not parse the replacements correctly')
+
+    def test_read_replacements_removal_replace(self):
+        """io_utils.read_replacements parses malformed replacement,
+        returns a dictionary
+        """
+        with patch("builtins.open",
+                   mock_open(read_data=self.removal_replace)) as mock_file:
+                malformed_result = io_utils.read_replacements(None)
+        self.assertIsInstance(malformed_result, dict,
+                              'does return a dictionary')
+        self.assertEqual(malformed_result, {'a': ''},
+                         'does not parse the replacement correctly')
 
     @patch('builtins.print')
-    def test_rule_reader_default_reminder_and_out_stream(self, mock_print):
-        """io_utils.rule_reader test output of default reminder"""
+    def test_read_replacements_default_reminder_and_out_stream(self,
+                                                               mock_print):
+        """io_utils.read_replacements test output of default reminder"""
         blank_stream = open(os.devnull, 'w')  # open stream to devnull
-        default_location = os.getcwd() + '/../distend/rules.conf'
-        default_call = f'[+] default rules file: {default_location}'
-        silent_call = f'[+] default rules file: {default_location}'
+        default_location = os.getcwd() + '/distend/configuration.txt'
+        default_call = f'[+] replacements from: {default_location}'
         with patch("builtins.open", mock_open(read_data=self.file)) as default:
-                result = io_utils.rule_reader(None)
+                result = io_utils.read_replacements(None)
                 mock_print.assert_called_with(default_call, file=None)
         with patch("builtins.open", mock_open(read_data=self.file)) as silent:
-                silent_result = io_utils.rule_reader(None, False, blank_stream)
-                mock_print.assert_called_with(silent_call, file=blank_stream)
+                silent_result = io_utils.read_replacements(None, False,
+                                                           blank_stream)
+                mock_print.assert_called_with(default_call, file=blank_stream)
+        blank_stream.close()
 
-    def test_pre_post_reader_parses_single_prepend_and_postpend(self):
-        """io_utils.pre_post_reader parses file,
+    def test_get_default_configuration_location(self):
+        """io_utils.get_default_configuration_location
+        returns correct location
+        """
+        default_location = os.getcwd() + '/distend/configuration.txt'
+        self.assertEqual(str(io_utils.get_default_configuration_location()),
+                         default_location,
+                         'does not return the default configuration location')
+
+    def test_read_pre_post_parses_single_prepend_and_postpend(self):
+        """io_utils.read_pre_post parses file,
         returns tuple:(str:prepend, str:postpend)
         """
         with patch("builtins.open", mock_open(read_data=self.file)) as mock_file:
-                result = io_utils.pre_post_reader(None)
+                result = io_utils.read_pre_post(None)
         self.assertIsInstance(result, tuple, 'does return a tuple')
         self.assertIsInstance(result[0], str, 'element zero is not a str')
         self.assertIsInstance(result[1], str, 'element one is not a str')
         self.assertEqual(result, ('1972', '1984'),
                          'does not parse single pre and postpend correctly')
 
-    def test_pre_post_reader_parses_multiple_prepends_and_postpends(self):
-        """io_utils.pre_post_reader parses,
+    def test_read_pre_post_parses_multiple_prepends_and_postpends(self):
+        """io_utils.read_pre_post parses,
         returns tuple:(list:prepends, list:postpends)
         """
         with patch("builtins.open",
                    mock_open(read_data=self.list_pre_postpend)) as mock_file:
-                result = io_utils.pre_post_reader(None)
+                result = io_utils.read_pre_post(None)
         self.assertIsInstance(result, tuple, 'does return a tuple')
         self.assertIsInstance(result[0], list, 'element zero is not a list')
         self.assertIsInstance(result[1], list, 'element one is not a list')
         self.assertEqual(result, (['1972', '1973'], ['1984', '1985']),
                          'does not parse multiple pre and postpends correctly')
 
-    def test_pre_post_reader_parses_no_and_blank_prepends_and_postpends(self):
-        """io_utils.pre_post_reader parses,
+    def test_read_pre_post_parses_no_and_blank_prepends_and_postpends(self):
+        """io_utils.read_pre_post parses,
         returns tuple:(str:prepends, str:postpends)
         """
         with patch("builtins.open",
                    mock_open(read_data=self.blank_pre_postpend)) as mock_file:
-                blank_result = io_utils.pre_post_reader(None)
+                blank_result = io_utils.read_pre_post(None)
         with patch("builtins.open",
                    mock_open(read_data=self.no_pre_postpend)) as mock_file:
-                no_result = io_utils.pre_post_reader(None)
+                no_result = io_utils.read_pre_post(None)
         self.assertIsInstance(blank_result, tuple, 'does return a tuple')
         self.assertIsInstance(blank_result[0], str,
                               'element zero is not a str')
@@ -218,6 +264,35 @@ class TestIoUtils(unittest.TestCase):
                          'does not parse blank pre and postpends correctly')
         self.assertEqual(no_result, ('', ''),
                          'does not parse no pre and postpends case correctly')
+
+    def test_read_pre_post_parses_malformed_pre_postpends(self):
+        """io_utils.read_pre_post parses,
+        returns tuple(str:prepend, list:postpend)"""
+        with patch("builtins.open",
+                mock_open(read_data=self.malformed_pre_postpend)) as mock_file:
+                malformed_result = io_utils.read_pre_post(None)
+        self.assertIsInstance(malformed_result, tuple, 'does return a tuple')
+        self.assertIsInstance(malformed_result[0], str,
+                              'element zero is not a str')
+        self.assertIsInstance(malformed_result[1], list,
+                              'element one is not a list')
+        self.assertEqual(malformed_result, ('', ['1984', '1985']),
+                         'does not parse malformed pre postpends correctly')
+
+    @patch('builtins.print')
+    def test_read_pre_post_default_reminder_and_out_stream(self, mock_print):
+        """io_utils.read_pre_post test output of default reminder"""
+        blank_stream = open(os.devnull, 'w')  # open stream to devnull
+        default_location = os.getcwd() + '/distend/configuration.txt'
+        default_call = f'[+] pre and postpends from: {default_location}'
+        with patch("builtins.open", mock_open(read_data=self.file)) as default:
+                result = io_utils.read_pre_post(None)
+                mock_print.assert_called_with(default_call, file=None)
+        with patch("builtins.open", mock_open(read_data=self.file)) as silent:
+                silent_result = io_utils.read_pre_post(None, False,
+                                                         blank_stream)
+                mock_print.assert_called_with(default_call, file=blank_stream)
+        blank_stream.close()
 
     def test_unique_file_name_formats_correctly(self):
         """io_utils.unique_file_name returns correct string given input"""
@@ -293,8 +368,9 @@ class TestIoUtils(unittest.TestCase):
         """io_utils.read_file_generator works and returns a generator"""
         infile = 'unique.txt'
         file_data = 'first_word\nsecond_word\nthird_word'
-        generator_type = type(1 for i in "")
-        with patch("builtins.open", mock_open(read_data=file_data)) as mock_file:
+        generator_type = type(0 for i in [])
+        with patch("builtins.open",
+                   mock_open(read_data=file_data)) as mock_file:
                 result = io_utils.read_file_generator(infile)
                 self.assertEqual(type(result), generator_type,
                                  'does not return a generator')
@@ -321,9 +397,9 @@ class TestIoUtils(unittest.TestCase):
         lines = ['first', 'second']
         single_element = ['first']
         io_utils.append_list(lines, None)
-        mock_print.assert_called_with('first\nsecond\n')
+        mock_print.assert_called_with('first\nsecond\n', end='')
         io_utils.append_list(single_element, None)
-        mock_print.assert_called_with('first\n')
+        mock_print.assert_called_with('first\n', end='')
 
     @patch('distend.io_utils.shutil.move')
     def test_rename_file(self, mock_move):
@@ -340,13 +416,13 @@ class TestIoUtils(unittest.TestCase):
             io_utils.rename_file(temp_file, rn_file, force)
             mock_move.assert_called_once_with(temp_file, rn_file)
 
-    def test_generator_file_check(self):
-        """io_utils.generator_file_check checks if a file exists
+    def test_check_infile(self):
+        """io_utils.check_infile checks if a file exists
         returns bool:True or raises a systemexit if a file does not exist
         """
         infile = 'existing_file.txt'
         with patch('distend.io_utils.file_exists', return_value=True):
-            assert io_utils.generator_file_check(infile)
+            assert io_utils.check_infile(infile)
 
     def test_version_appears_in_banner_title(self):
         """io_utils.banner_title returns a banner with the version in it"""

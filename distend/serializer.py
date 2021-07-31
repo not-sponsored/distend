@@ -7,23 +7,25 @@ import distend.modifier
 from typing import Tuple, Callable
 
 # change function definition
-def serialize_args(multi_rule: bool, verbose: bool,
+def serialize_args(replace_multiple: bool, verbose: bool,
                    prepend, postpend) -> Tuple[Callable, Callable]:
-    """takes bool:multi_rule, bool:verbose flag, prepend, postpend
+    """takes bool:replace_multiple, bool:verbose flag, prepend, postpend
     note that prepend and postpend could be either a list or str,
-    return a tuple of (transform, fuse) functions
+    return a tuple of (replace, fuse) functions
     """
-    transform = get_multi_rule_function(multi_rule)
+    replace = get_replace_function(replace_multiple)
     fuse = get_pre_postpend_function(prepend, postpend)
-    return transform, fuse
+    return replace, fuse
 
 # name change
-def get_multi_rule_function(multi_rule: bool) -> Callable:
-    """given bool:multi_rule flag, return transform function from modifier"""
-    if multi_rule:
-        return distend.modifier.multi_transform
+def get_replace_function(replace_multiple: bool) -> Callable:
+    """given bool:replace_multiple flag,
+    return replace function from modifier
+    """
+    if replace_multiple:
+        return distend.modifier.replace_multiple
     else:
-        return distend.modifier.single_transform
+        return distend.modifier.replace_single
 
 # name change
 def get_pre_postpend_function(prepend, postpend) -> Callable:

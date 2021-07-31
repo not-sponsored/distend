@@ -1,7 +1,3 @@
-# workaround
-import sys
-sys.path.append('..')
-
 # standard library
 import unittest
 
@@ -10,20 +6,20 @@ from distend import serializer
 
 class TestSerializer(unittest.TestCase):
 
-    def test_get_multi_rule_function(self):
-        """test serializer.get_multi_rule_function,
-        returns multi_transform function
+    def test_get_replace_function(self):
+        """test serializer.get_replace_function,
+        returns replace_multiple function
         """
-        multi_rule_true = True
-        multi_rule_false = False
-        transform_true = serializer.get_multi_rule_function(multi_rule_true)
-        transform_false = serializer.get_multi_rule_function(multi_rule_false)
-        self.assertTrue(callable(transform_true), 'return is not callable')
-        self.assertTrue(callable(transform_false), 'return is not callable')
-        self.assertEqual(transform_true.__name__, 'multi_transform',
-                         "not multi_transform when multi_rule is true")
-        self.assertEqual(transform_false.__name__, 'single_transform',
-                         "not single_transform when multi_rule is false")
+        replace_multiple_true = True
+        replace_multiple_false = False
+        replace_true = serializer.get_replace_function(replace_multiple_true)
+        replace_false = serializer.get_replace_function(replace_multiple_false)
+        self.assertTrue(callable(replace_true), 'return is not callable')
+        self.assertTrue(callable(replace_false), 'return is not callable')
+        self.assertEqual(replace_true.__name__, 'replace_multiple',
+                         "not replace_multiple when flag is true")
+        self.assertEqual(replace_false.__name__, 'replace_single',
+                         "not replace_single when flag is false")
 
     def test_get_pre_postpend_function_with_list_prepend_list_postpend(self):
         """test serializer.get_pre_postpend_function,

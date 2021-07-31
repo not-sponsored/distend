@@ -1,7 +1,3 @@
-# hacky way to get tests to run
-import sys
-sys.path.append('..')
-
 # standard library
 import unittest
 
@@ -68,69 +64,69 @@ class Testmodifier(unittest.TestCase):
         self.assertEqual(separator_result, 'test.1984',
                          'incorrect str of prepend with separator and base')
 
-    def test_multi_transform_returns_at_least_base(self):
-        """test modifier.multi_transform returns at least the base string"""
+    def test_replace_multiple_returns_at_least_base(self):
+        """test modifier.replace_multiple returns at least the base string"""
         base = 'test'
-        rules = {'a':'4', 'l':'1'}
-        blank_rules = {}
-        result = modifier.multi_transform(base, rules)
-        blank_rules_result = modifier.multi_transform(base, blank_rules)
+        replacements = {'a':'4', 'l':'1'}
+        blank_replacements = {}
+        result = modifier.replace_multiple(base, replacements)
+        blank_replacements_result = modifier.replace_multiple(base, blank_replacements)
         self.assertIsInstance(result, list, 'does not return a list')
-        self.assertIsInstance(blank_rules_result, list,
+        self.assertIsInstance(blank_replacements_result, list,
                               'does not return a list')
         self.assertEqual(len(result), 1, 'returns more elements than expected')
-        self.assertEqual(len(blank_rules_result), 1,
+        self.assertEqual(len(blank_replacements_result), 1,
                          'returns more elements than expected')
         self.assertIn(base, result, 'does not return base string')
-        self.assertIn(base, blank_rules_result, 'does not return base string')
+        self.assertIn(base, blank_replacements_result, 'does not return base string')
 
-    def test_multi_transform_against_rules(self):
-        """test modifier.multi_transform returns at most a list of length two"""
+    def test_replace_multiple_against_replacements(self):
+        """test modifier.replace_multiple returns at most a list of length two"""
         base = 'test'
-        rules = {'t':'7', 'e':'3'}
-        single_rule = {'s': '5'}
-        result = modifier.multi_transform(base, rules)
-        single_rule_result = modifier.multi_transform(base, single_rule)
+        replacements = {'t':'7', 'e':'3'}
+        single_replacement = {'s': '5'}
+        result = modifier.replace_multiple(base, replacements)
+        single_replacement_result = modifier.replace_multiple(base, single_replacement)
         self.assertIsInstance(result, list, 'does not return a list')
-        self.assertIsInstance(single_rule_result, list,
+        self.assertIsInstance(single_replacement_result, list,
                               'does not return a list')
         self.assertEqual(len(result), 2, 'returns more than 2 elements')
-        self.assertEqual(len(single_rule_result), 2,
+        self.assertEqual(len(single_replacement_result), 2,
                          'returns more than 2 elements')
         self.assertEqual(result, ['test', '73s7'],
                          'does not return expected list')
-        self.assertEqual(single_rule_result, ['test', 'te5t'],
+        self.assertEqual(single_replacement_result, ['test', 'te5t'],
                          'does not return expected list')
 
-    def test_single_transform_returns_at_least_base(self):
-        """test modifier.single_transform returns at least the base string"""
+    def test_replace_single_returns_at_least_base(self):
+        """test modifier.replace_single returns at least the base string"""
         base = 'test'
-        rules = {'a':'4', 'l':'1'}
-        blank_rules = {}
-        result = modifier.single_transform(base, rules)
-        blank_rules_result = modifier.single_transform(base, blank_rules)
+        replacements = {'a':'4', 'l':'1'}
+        blank_replacements = {}
+        result = modifier.replace_single(base, replacements)
+        blank_replacements_result = modifier.replace_single(base, blank_replacements)
         self.assertIsInstance(result, list, 'does not return a list')
-        self.assertIsInstance(blank_rules_result, list,
+        self.assertIsInstance(blank_replacements_result, list,
                               'does not return a list')
         self.assertEqual(len(result), 1, 'returns more elements than expected')
-        self.assertEqual(len(blank_rules_result), 1,
+        self.assertEqual(len(blank_replacements_result), 1,
                          'returns more elements than expected')
         self.assertIn(base, result, 'does not return base string')
-        self.assertIn(base, blank_rules_result, 'does not return base string')
+        self.assertIn(base, blank_replacements_result, 'does not return base string')
 
-    def test_single_transform_against_rules(self):
-        """test modifier.single_transform returns expected list"""
+    def test_replace_single_against_replacements(self):
+        """test modifier.replace_single returns expected list"""
         base = 'test'
-        rules = {'t':'7', 'e':'3'}
-        single_rule = {'s': '5'}
-        result = modifier.single_transform(base, rules)
-        single_rule_result = modifier.multi_transform(base, single_rule)
+        replacements = {'t':'7', 'e':'3'}
+        single_replacement = {'s': '5'}
+        result = modifier.replace_single(base, replacements)
+        single_replacement_result = modifier.replace_multiple(base, single_replacement)
         self.assertIsInstance(result, list, 'does not return a list')
-        self.assertIsInstance(single_rule_result, list,
+        self.assertIsInstance(single_replacement_result, list,
                               'does not return a list')
         self.assertEqual(result, ['test', '7es7', 't3st', '73s7'],
                          'does not return expected list')
-        self.assertEqual(single_rule_result, ['test', 'te5t'],
+        self.assertEqual(single_replacement_result, ['test', 'te5t'],
                          'does not return expected list')
 
     def test_fuse_list_prepend_list_postpend_returns_correct_list(self):

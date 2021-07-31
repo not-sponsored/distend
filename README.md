@@ -12,9 +12,7 @@
 </pre>
 </div>
 
-The fan finally whirred to a stop as the sun peeked over the horizon. After cracking an entire night, my tired laptop had given up. Wiping the sleep from my eyes, I noted that 0 hashes were cracked. I was frustrated because I knew some details about the password behind the hash, but I could not find a simple solution that would allow me to generate a targeted word list by modifying an existing generic list with the extra details. Thus, Distend was born.
-
-If you have a good word list, and you have some extra details surrounding the password in question such as
+Do you have a good word list? Perhaps you also have specific intel about the password in question such as
 
 - Date of birth
 - Mother's maiden name
@@ -22,36 +20,47 @@ If you have a good word list, and you have some extra details surrounding the pa
 - Age
 - Address
 - Other important dates
-- Favorite words
 - Business specific terms
 - Favorite foods
 - Catch phrases
-- etc
+- Etc
 
-then Distend is for you. It can even implement common leet speak substitutions as well!
+Why not combine the word list with the extra details?
+
+If you agree, then Distend is for you. It can even implement common leet speak replacements.
 
 -----
 ## Installation
 
-You can install the package from PyPi using pip or directly clone the repository.
+You can install the package from PyPi using pip
 
 ```sh
 pip install distend
 ```
 
-Distend is supported on Python 3.6 and above.
+or you can directly clone the repository then run the setup
+
+```sh
+cd [your_clone_location]
+pip install .
+```
+
+Distend is supported on Python 3.6 and above. Also, there are no dependencies
+other than a few standard library packages (included by default with your python install).
 
 -----
 ## Usage
 
-If installed with pip:
+Basic Usage
+
 ```sh
 distend infile.txt outfile.txt
 ```
 
-If cloned:
+For more details use the help flag
+
 ```sh
-python3 distend.py infile.txt outfile.txt
+distend -h
 ```
 
 -----
@@ -63,9 +72,10 @@ To run the unit tests, navigate to the test directory and run the following
 python3 -m unittest test_modifier.py
 python3 -m unittest test_io_utils.py
 python3 -m unittest test_serializer.py
-python3 -m unittest test_drive.py
 python3 -m unittest test_cli.py
 ```
+
+You may have to visit the repository to get the test files because they are not included with the pip install.
 -----
 ## Meta
 Hanwen Zuo – HanwenZuo1@gmail.com
