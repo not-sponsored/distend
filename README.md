@@ -12,7 +12,7 @@
 </pre>
 </div>
 
-Do you have a good word list? Perhaps you also have specific intel about the password in question such as
+Psst. Hey there kid. I got a free word list generator that makes cracking a breeze. All you have to do is star the repository. Just kidding but the free part is not a joke. Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intel about the person/password in question such as a
 
 - Date of birth
 - Mother's maiden name
@@ -25,9 +25,9 @@ Do you have a good word list? Perhaps you also have specific intel about the pas
 - Catch phrases
 - Etc
 
-Why not combine the word list with the extra details?
+Why not combine the generic word list with the extra details for a more targeted list?
 
-If you agree, then Distend is for you. It can even implement common leet speak replacements.
+If you think that's a good idea, then Distend is for you. It can even implement common leet speak character replacements.
 
 -----
 ## Installation
@@ -45,8 +45,7 @@ cd [your_clone_location]
 pip install .
 ```
 
-Distend is supported on Python 3.6 and above. Also, there are no dependencies
-other than a few standard library packages (included by default with your python install).
+Distend is supported on Python 3.6 and above. Also, there are no dependencies, but Distend does use a few standard library packages (included by default with your Python install).
 
 -----
 ## Usage
@@ -76,6 +75,7 @@ python3 -m unittest test_cli.py
 ```
 
 You may have to visit the repository to get the test files because they are not included with the pip install.
+
 -----
 ## Meta
 Hanwen Zuo – HanwenZuo1@gmail.com
