@@ -1,7 +1,7 @@
 # Distend
 > generate targeted word lists for password cracking
 
-![](https://github.com/not-sponsored/distend/blob/feature/example_usage.gif)
+![](https://github.com/not-sponsored/distend/blob/main/example_usage.gif)
 
 Psst. Hey there kid. I got a free word list generator that makes cracking a breeze. All you have to do is star the repository. Just kidding but the free part is not a joke. Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intel about the person/password in question such as a
 
