@@ -3,6 +3,7 @@
 
 # ignore test files
 /distend/*.txt
+*.txt
 
 # ignore word list files
 /dct
@@ -11,3 +12,4 @@
 /build
 /dist
 /distend_hanzuo.egg-info
+distend.egg*

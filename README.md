@@ -1,20 +1,9 @@
 # Distend
 > generate targeted word lists for password cracking
 
-<div align="center">
-<pre>
-██████╗ ██╗███████╗████████╗███████╗███╗   ██╗██████╗
-██╔══██╗██║██╔════╝╚══██╔══╝██╔════╝████╗  ██║██╔══██╗
-██║  ██║██║███████╗   ██║   █████╗  ██╔██╗ ██║██║  ██║
-██║  ██║██║╚════██║   ██║   ██╔══╝  ██║╚██╗██║██║  ██║
-██████╔╝██║███████║   ██║   ███████╗██║ ╚████║██████╔╝
-╚═════╝ ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝╚═════╝
-</pre>
-</div>
+![](https://github.com/not-sponsored/distend/blob/feature/example_usage.gif)
 
-The fan finally whirred to a stop as the sun peeked over the horizon. After cracking an entire night, my tired laptop had given up. Wiping the sleep from my eyes, I noted that 0 hashes were cracked. I was frustrated because I knew some details about the password behind the hash, but I could not find a simple solution that would allow me to generate a targeted word list by modifying an existing generic list with the extra details. Thus, Distend was born.
-
-If you have a good word list, and you have some extra details surrounding the password in question such as
+Psst. Hey there kid. I got a free word list generator that makes cracking a breeze. All you have to do is star the repository. Just kidding but the free part is not a joke. Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intel about the person/password in question such as a
 
 - Date of birth
 - Mother's maiden name
@@ -22,36 +11,47 @@ If you have a good word list, and you have some extra details surrounding the pa
 - Age
 - Address
 - Other important dates
-- Favorite words
 - Business specific terms
 - Favorite foods
 - Catch phrases
-- etc
+- Etc
 
-then Distend is for you. It can even implement common leet speak substitutions as well!
+Why not combine the generic word list with the extra details for a more targeted list?
+
+If you think that's a good idea, then Distend is for you. It can even implement common leet speak character replacements.
 
 -----
 ## Installation
 
-You can install the package from PyPi using pip or directly clone the repository.
+You can install the package from PyPi using pip
 
 ```sh
 pip install distend
 ```
 
-Distend is supported on Python 3.6 and above.
+or you can directly clone the repository then install locally
+
+```sh
+git clone [url_from_code_button_above]
+cd [your_clone_location]
+pip install .
+```
+
+Distend is supported on Python 3.6 and above. Also, there are no dependencies, but Distend does use a few standard library packages (included by default with your Python install).
 
 -----
 ## Usage
 
-If installed with pip:
+Basic Usage
+
 ```sh
 distend infile.txt outfile.txt
 ```
 
-If cloned:
+For more details and options use the help flag
+
 ```sh
-python3 distend.py infile.txt outfile.txt
+distend -h
 ```
 
 -----
@@ -63,9 +63,11 @@ To run the unit tests, navigate to the test directory and run the following
 python3 -m unittest test_modifier.py
 python3 -m unittest test_io_utils.py
 python3 -m unittest test_serializer.py
-python3 -m unittest test_drive.py
 python3 -m unittest test_cli.py
 ```
+
+You may have to visit the repository to get the test files because they are not included with the pip install.
+
 -----
 ## Meta
 Hanwen Zuo – HanwenZuo1@gmail.com

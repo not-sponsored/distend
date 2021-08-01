@@ -1,62 +1,50 @@
 """serialize the command line arguments"""
 
 # internal distend imports
-import distend.modifier as mod
-import distend.drive as drive
+import distend.modifier
 
-def serialize_args(multi_rule, verbose, pends):
-    """take bool:multi_rule and bool:verbose flag as well as tuple:pends,
-    return fncts serialized according to inputs in tuple
+# standard library
+from typing import Tuple, Callable
+
+# change function definition
+def serialize_args(replace_multiple: bool, verbose: bool,
+                   prepend, postpend) -> Tuple[Callable, Callable]:
+    """takes bool:replace_multiple, bool:verbose flag, prepend, postpend
+    note that prepend and postpend could be either a list or str,
+    return a tuple of (replace, fuse) functions
     """
-    trn_fnct = get_multi_rule(multi_rule)
-    fuse_fnct = get_pends(pends[0], pends[1])
-    drive_fnct = get_drive(verbose, pends[0], pends[1])
-    return (trn_fnct, fuse_fnct, drive_fnct)
+    replace = get_replace_function(replace_multiple)
+    fuse = get_pre_postpend_function(prepend, postpend)
+    return replace, fuse
 
-def get_multi_rule(multi_rule):
-    """given bool:multi_rule flag, return transform fnct from modifier"""
-    if multi_rule:
-        return mod.multi_transform
+# name change
+def get_replace_function(replace_multiple: bool) -> Callable:
+    """given bool:replace_multiple flag,
+    return replace function from modifier
+    """
+    if replace_multiple:
+        return distend.modifier.replace_multiple
     else:
-        return mod.single_transform
+        return distend.modifier.replace_single
 
-def get_pends(prepend, postpend):
-    """given pre and post pends, return fuse fnct from modifier"""
-    if prepend and postpend:
-        if isinstance(prepend, list) and isinstance(postpend, list):
-            return mod.fuse_lp_lp
-        if isinstance(prepend, list) and isinstance(postpend, str):
-            return mod.fuse_lp_sp
-        if isinstance(prepend, str) and isinstance(postpend, list):
-            return mod.fuse_sp_lp
-        if isinstance(prepend, str) and isinstance(postpend, str):
-            return mod.fuse_sp_sp
-    elif prepend:
-        if isinstance(prepend, list):
-            return mod.fuse_lp_np
-        if isinstance(prepend, str):
-            return mod.fuse_sp_np
-    elif postpend:
-        if isinstance(postpend, list):
-            return mod.fuse_np_lp
-        if isinstance(postpend, str):
-            return mod.fuse_np_sp
-    else:
-        return None
-
-def get_drive(verbose, prepend, postpend):
-    """given bool:verbose and pre and post pends, return drive fnct"""
-    if verbose:
-        if prepend and postpend:
-            return drive.verbose_pre_post
-        elif prepend or postpend:
-            return drive.verbose_single_pend
-        else:
-            return drive.verbose_no_pend
-    else:
-        if prepend and postpend:
-            return drive.concise_pre_post
-        elif prepend or postpend:
-            return drive.concise_single_pend
-        else:
-            return drive.concise_no_pend
+# name change
+def get_pre_postpend_function(prepend, postpend) -> Callable:
+    """given pre and postpends, return fuse function from modifier"""
+    attributes = (
+        bool(prepend),                          # True if not ''
+        bool(postpend),
+        isinstance(prepend, list),
+        isinstance(postpend, list)
+    )
+    fuse_function_lookup = {
+        (1,1,1,1): distend.modifier.fuse_list_prepend_list_postpend,
+        (1,1,1,0): distend.modifier.fuse_list_prepend_str_postpend,
+        (1,1,0,1): distend.modifier.fuse_str_prepend_list_postpend,
+        (1,1,0,0): distend.modifier.fuse_str_prepend_str_postpend,
+        (1,0,1,0): distend.modifier.fuse_list_prepend_no_postpend,
+        (1,0,0,0): distend.modifier.fuse_str_prepend_no_postpend,
+        (0,1,0,1): distend.modifier.fuse_no_prepend_list_postpend,
+        (0,1,0,0): distend.modifier.fuse_no_prepend_str_postpend,
+        (0,0,0,0): None
+    }
+    return fuse_function_lookup.get(attributes, None)

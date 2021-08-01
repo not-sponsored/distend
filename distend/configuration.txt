@@ -1,0 +1,51 @@
+# place a hash at the start of a line to comment
+
+# replacements - replace first string with second string
+# prepend -- insert a string at the beginning of the base word
+# postpend -- insert a string at the end of the base word
+# base_word refers to the word from the given wordlist to modify
+
+### Replacements
+# example below replaces 'a' with '4'
+# a = @ 
+# base_word -> b@se_word 
+
+l = 1
+a = 4
+e = 3
+o = 0
+t = 7
+
+
+### Prepend
+## Single Prepend
+# use magic keyword 'prepend'
+# prepend, first -- format for single prepend
+# example below sets prepend as '1984'
+# prepend, 1984
+# base_word -> base_word1984 
+
+## Multiple Prepends
+# prepend, first, second, third -- format for many prepends similar to csv
+# example below sets prepend to both '1984' and '1985'
+# prepend, 1984, 1985
+# base_word -> base_word1984 -> base_word1985
+
+prepend, 1984, 1985
+
+
+### Postpend
+## Single Postpend
+# use magic keyword 'postpend'
+# postpend, first -- format for single prepend
+# example below sets postpend to '1984'
+# postpend, 1984
+# base_word -> 1984base_word
+
+## Multiple Postpends
+# postpend, first, second, third -- format for many postpends similar to csv
+# example below sets postpend to both '1974' and '1975'
+# postpend, 1974, 1975
+# base_word -> 1974base_word -> 1975base_word
+
+postpend, 1972, 1973

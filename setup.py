@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="distend",
-    version="1.0.1",
+    version="1.1.0",
     author="Hanwen Zuo",
     author_email="HanwenZuo1@gmail.com",
     description="Distend - targeted word list generator",
@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/not-sponsored/distend",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    package_data={'': ['rules.conf']},
+    package_data={'': ['configuration.txt']},
     classifiers=[
         "Programming Language :: Python :: 3",
     ],

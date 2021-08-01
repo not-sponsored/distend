@@ -1,234 +1,274 @@
 """functions to modify the string(s)"""
 
-def pre_list(base, prepend):
-    """Inserts list:prepend at beginning of str:base, returns a list."""
-    return [f'{pre}{base}' for pre in prepend]
+# add separator
+def prepend_list(base_word: str, prepend: list, separator: str='') -> list:
+    """Inserts list:prepend at beginning of str:base_word
+    with default str:separator='', returns a list
+    """
+    return [f'{pre}{separator}{base_word}' for pre in prepend]
 
-def post_list(base, postpend):
-    """Appends list:postpend to end of str:base, returns a list."""
-    return [f'{base}{post}' for post in postpend]
+# add separator
+def postpend_list(base_word: str, postpend: list, separator: str='') -> list:
+    """Appends list:postpend to end of str:base_word
+    with default str:separator='', returns a list.
+    """
+    return [f'{base_word}{separator}{post}' for post in postpend]
 
-def pre_str(base, prepend):
-    """Inserts str:prepend at beginning of str:base, returns a str"""
-    return f'{prepend}{base}'
+# add parameter separator
+def prepend_str(base_word: str, prepend: str, separator: str='') -> str:
+    """Inserts str:prepend at beginning of str:base_word
+    with default str:separator='', returns a str
+    """
+    return f'{prepend}{separator}{base_word}'
 
-def post_str(base, postpend):
-    """Appends str:postpend to str:base, returns a str"""
-    return f'{base}{postpend}'
+# add parameter separator
+def postpend_str(base_word: str, postpend: str, separator: str='') -> str:
+    """Appends str:postpend to str:base_word
+    with default str:separator, returns a str
+    """
+    return f'{base_word}{separator}{postpend}'
 
-def multi_transform(base, rules):
-    """Substitutes characters in str:base based on dict:rules
-    Multi_transform applies all rules at once instead of one rule at a time
+def replace_multiple(base_word: str, all_replacements: dict) -> list:
+    """replaces characters in str:base_word with dict:all_replacements
+    replace_multiple replaces all at once instead of one at a time
     i.e. password -> p@ssw0rd instead of password -> p@ssword -> p@ssw0rd
 
-    :param base: original string to modify
-    :type base: string
-    :param rules: rules in key:value format or original:substitution
-    :type rules: dictionary
+    :param base_word: original string to modify
+    :type base_word: string
+    :param all_replacements: format of original:replacement
+    :type all_replacements: dictionary
 
     :rtype: list, max length of 2
-    :return: 1st element is str:base and 2nd is all rules applied
+    :return: 1st element is str:base_word and 2nd element is all replaced
     """
-    accumulated = base
-    transformed = [base]
-    for rule, subst in rules.items():
-        if rule in base:
-            accumulated = accumulated.replace(rule, subst)
-    if accumulated != base:
-        transformed.append(accumulated)
-    return transformed
+    fully_replaced = base_word  # set to base_word and replace all later
+    replaced = [base_word]
+    for original, replacement in all_replacements.items():
+        if original in base_word:
+            fully_replaced = fully_replaced.replace(original, replacement)
+    if fully_replaced != base_word:  # make sure base_word is not repeated
+        replaced.append(fully_replaced)
+    return replaced
 
-def single_transform(base, rules):
-    """Substitutes characters in str:base using dict:rules
-    Single_transform applies one rule at a time instead of all rules at once
-    i.e. password -> p@ssword -> p@ssw0rd instead of password -> p@ssw0rd
+def replace_single(base_word: str, all_replacements: dict) -> list:
+    """replaces characters in str:base_word using dict:all_replacements
+    replace_single replaces one at a time instead of all at once
+    i.e. password -> p@ssword -> passw0rd -> p@ssw0rd
+    instead of password -> p@ssw0rd
 
-    :param base: original string to modify
-    :type base: string
-    :param rules: rules in key:value format or original:substitution
-    :type rules: dictionary
+    :param base_word: original string to modify
+    :type base_word: string
+    :param all_replaced: format of original:replacement
+    :type all_replaced: dictionar
 
     :rtype: list, minimum length of 1
-    :return: 1st element is str:base other elements vary based on applied rule
+    :return: 1st element is str:base_word other elements vary by replacement
     """
-    accumulated = base
-    transformed = [base]
-    for rule, subst in rules.items():
-        if rule in base:
-            transformed.append(base.replace(rule, subst))
-            accumulated = accumulated.replace(rule, subst)
-    if accumulated != transformed[-1]:
-        transformed.append(accumulated)
-    return transformed
+    fully_replaced = base_word  # set for replacement later
+    replaced = [base_word]
+    for original, replacement in all_replacements.items():
+        if original in base_word:
+            replaced.append(base_word.replace(original, replacement))
+            fully_replaced = fully_replaced.replace(original, replacement)
+    # no duplicates of base_word or a single replaced word
+    if fully_replaced != replaced[-1]:
+        replaced.append(fully_replaced)
+    return replaced
 
-def fuse_lp_lp(transformed, prepend, postpend):
-    """With lst:transformed, lst:prepend, lst:postpend returns a lst:fused
-    Fuses pre and postpends onto the transformed strings and returns lst:fused
-    Function name short hand for 'fuse list prepend list postpend'
+# add separator
+def fuse_list_prepend_list_postpend(replaced: list, prepend: list,
+                                    postpend: list, separator: str='') -> list:
+    """With list:replaced, list:prepend, list:postpend, str:separator,
+    returns a list:fused
+    appends pre and postpends to the replaced strings and returns list:fused
 
-    :param transformed: strings with single/multi transform applied
-    :type transformed: list
-    :param prepend: prepends to insert at beginning of each transformed string
+    :param replaced: strings with single/multi transform applied
+    :type replaced: list
+    :param prepend: prepends to insert at beginning of each replaced string
     :type prepend: list, minimum length of 2
-    :param postpend: postpends to append on end of each transformed string
+    :param postpend: postpends to append on end of each replaced string
     :type postpend: list, minimum length of 2
+    :param separator: separator between base_word and prepends and postpends
+    :type separator: string default of ''
 
     :rtype: list
-    :return: pre/postpends applied, and uniquely transformed strings appended
+    :return: pre/postpends applied, and uniquely replaced strings appended
     """
     fused = []
-    for word in transformed:
-        a_pre = pre_list(word, prepend)
-        fused.extend(a_pre)
-        fused.extend(post_list(word, postpend))
-        fused.extend([pre_post for pre in a_pre for pre_post in\
-                        post_list(pre, postpend)])
-    # uniquely transformed strings not including base string
-    fused.extend(transformed[1:])
+    for word in replaced:
+        prepend_applied = prepend_list(word, prepend, separator)
+        fused.extend(prepend_applied)
+        fused.extend(postpend_list(word, postpend, separator))
+        fused.extend([pre_post for pre in prepend_applied for pre_post in\
+            postpend_list(pre, postpend, separator)])  # apply post on prepends
+    fused.extend(replaced[1:])  # uniquely replaced strings
     return fused
 
-def fuse_lp_sp(transformed, prepend, postpend):
-    """given lst:transformed, lst:prepend, str:postpend returns a lst:fused
-    fuses pre and postpends onto the transformed strings and returns lst:fused
-    fnct name short hand for 'fuse list pre string post'
+# add separator
+def fuse_list_prepend_str_postpend(replaced: list, prepend:list,
+                                   postpend: str, separator: str='') -> list:
+    """given list:replaced, list:prepend, str:postpend, str:separator,
+    returns a list:fused
+    fuses pre and postpends onto the replaced strings and returns list:fused
 
-    :param transformed: strings with single/multi transform applied
-    :type transformed: list
-    :param prepend: prepends to insert at beginning of each transformed string
+    :param replaced: strings with single/multi transform applied
+    :type replaced: list
+    :param prepend: prepends to insert at beginning of each replaced string
     :type prepend: list, minimum length of 2
-    :param postpend: postpend to append on end of each transformed string
+    :param postpend: postpend to append on end of each replaced string
     :type postpend: string
+    :param separator: separator between base_word and prepends and postpend
+    :type separator: string default of ''
 
     :rtype: list
-    :return: pre/postpends applied, and uniquely transformed strings appended
+    :return: pre/postpends applied, and uniquely replaced strings appended
     """
     fused = []
-    for word in transformed:
-        a_pre = pre_list(word, prepend)
-        fused.extend(a_pre)
-        fused.append(post_str(word, postpend))
-        fused.extend([f'{pre}{postpend}' for pre in a_pre])
-    # uniquely transformed strings not including base string
-    fused.extend(transformed[1:])
+    for word in replaced:
+        prepend_applied = prepend_list(word, prepend, separator)
+        fused.extend(prepend_applied)
+        fused.append(postpend_str(word, postpend, separator))
+        fused.extend([postpend_str(pre, postpend, separator) for pre in\
+                      prepend_applied])  # apply postpend onto prepend_applied
+    fused.extend(replaced[1:])  # uniquely replaced strings
     return fused
 
-def fuse_sp_lp(transformed, prepend, postpend):
-    """given lst:transformed, str:prepend, lst:postpend returns a lst:fused
-    fuses pre and postpends onto the transformed strings and returns lst:fused
-    fnct name short hand for 'fuse string pre list post'
+# add separator
+def fuse_str_prepend_list_postpend(replaced: list, prepend: str,
+                                   postpend: list, separator: str='') -> list:
+    """given list:replaced, str:prepend, list:postpend, str:separator,
+    returns a list:fused
+    fuses pre and postpends onto the replaced strings and returns list:fused
 
-    :param transformed: strings with single/multi transform applied
-    :type transformed: list
-    :param prepend: prepend to insert at beginning of each transformed string
+    :param replaced: strings with single/multi transform applied
+    :type replaced: list
+    :param prepend: prepend to insert at beginning of each replaced string
     :type prepend: string
-    :param postpend: postpends to append on end of each transformed string
+    :param postpend: postpends to append on end of each replaced string
     :type postpend: list, minimum length of 2
+    :param separator: separator between base_word and prepend and postpends
+    :type separator: string default of ''
 
     :rtype: list
-    :return: pre/postpends applied, and uniquely transformed strings appended
+    :return: pre/postpends applied, and uniquely replaced strings appended
     """
     fused = []
-    for word in transformed:
-        fused.append(pre_str(word, prepend))
-        a_post = post_list(word, postpend)
-        fused.extend(a_post)
-        fused.extend([f'{prepend}{post}' for post in a_post])
-    # uniquely transformed strings not including base string
-    fused.extend(transformed[1:])
+    for word in replaced:
+        fused.append(prepend_str(word, prepend, separator))
+        postpend_applied = postpend_list(word, postpend, separator)
+        fused.extend(postpend_applied)
+        fused.extend([prepend_str(post, prepend, separator) for post in\
+                      postpend_applied])  # apply prepend on postpend_applied
+    fused.extend(replaced[1:])  # uniquely replaced strings
     return fused
 
-def fuse_sp_sp(transformed, prepend, postpend):
-    """given lst:transformed, str:prepend, lst:postpend returns a lst:fused
-    fuses pre and postpend onto the transformed strings and returns lst:fused
-    fnct name short hand for 'fuse string pre string post'
+# add separator
+def fuse_str_prepend_str_postpend(replaced: list, prepend: str,
+                                  postpend: str, separator: str='') -> list:
+    """given list:replaced, str:prepend, str:postpend, str:separator,
+    returns a list:fused
+    fuses pre and postpend onto the replaced strings and returns list:fused
 
-    :param transformed: strings with single/multi transform applied
-    :type transformed: list
-    :param prepend: prepend to insert at beginning of each transformed string
+    :param replaced: strings with single/multi transform applied
+    :type replaced: list
+    :param prepend: prepend to insert at beginning of each replaced string
     :type prepend: string
-    :param postpend: postpend to append on end of each transformed string
+    :param postpend: postpend to append on end of each replaced string
     :type postpend: string
+    :param separator: separator between base_word and prepend and postpend
+    :type separator: string default of ''
 
     :rtype: list
-    :return: pre/postpend applied, and uniquely transformed strings appended
+    :return: pre/postpend applied, and uniquely replaced strings appended
     """
     fused = []
-    for word in transformed:
-        fused.append(pre_str(word, prepend))
-        fused.append(post_str(word, postpend))
-        fused.append(f'{prepend}{word}{postpend}')
-    # uniquely transformed strings not including base string
-    fused.extend(transformed[1:])
+    for word in replaced:
+        fused.append(prepend_str(word, prepend, separator))
+        fused.append(postpend_str(word, postpend, separator))
+        # apply both at the same time
+        fused.append(f'{prepend}{separator}{word}{separator}{postpend}')
+    fused.extend(replaced[1:])  # uniquely replaced strings
     return fused
 
-def fuse_lp_np(transformed, prepend):
-    """given lst:transformed, lst:prepend returns a lst:fused
-    fuses prepends onto the transformed strings and returns lst:fused
-    fnct name short hand for 'fuse list pre no post'
+# add separator
+def fuse_list_prepend_no_postpend(replaced: list, prepend: list,
+                                  separator: str='') -> list:
+    """given list:replaced, list:prepend, str:separator returns a list:fused
+    fuses prepends onto the replaced strings and returns list:fused
 
-    :param transformed: strings with single/multi transform applied
-    :type transformed: list
-    :param prepend: prepends to insert at beginning of each transformed string
+    :param replaced: strings with single/multi transform applied
+    :type replaced: list
+    :param prepend: prepends to insert at beginning of each replaced string
     :type prepend: list, minimum length of 2
+    :param separator: separator between base_word and prepends
+    :type separator: string default of ''
 
     :rtype: list
-    :return: prepends applied, and uniquely transformed strings appended
+    :return: prepends applied, and uniquely replaced strings appended
     """
-    fused = [pre_str(word, pre) for pre in prepend for word in transformed]
-    # uniquely transformed strings not including base string
-    fused.extend(transformed[1:])
+    fused = [prepend_str(word, pre, separator) for pre in prepend\
+             for word in replaced]  # prepends for each replaced str
+    fused.extend(replaced[1:])  # uniquely replaced strings
     return fused
 
-def fuse_sp_np(transformed, prepend):
-    """given lst:transformed, str:prepend returns a lst:fused
-    fuses prepends onto the transformed strings and returns lst:fused
-    fnct name short hand for 'fuse str pre no post'
+# add separator
+def fuse_str_prepend_no_postpend(replaced: list, prepend: str,
+                                 separator: str='') -> list:
+    """given list:replaced, str:prepend, str:separator returns a list:fused
+    fuses prepends onto the replaced strings and returns list:fused
 
-    :param transformed: strings with single/multi transform applied
-    :type transformed: list
-    :param prepend: prepend to insert at beginning of each transformed string
+    :param replaced: strings with single/multi transform applied
+    :type replaced: list
+    :param prepend: prepend to insert at beginning of each replaced string
     :type prepend: string
+    :param separator: separator between base_word and prepend
+    :type separator: string default of ''
 
     :rtype: list
-    :return: prepend applied, and uniquely transformed strings appended
+    :return: prepend applied, and uniquely replaced strings appended
     """
-    fused = [pre_str(word, prepend) for word in transformed]
-    # uniquely transformed strings not including base string
-    fused.extend(transformed[1:])
+    fused = [prepend_str(word, prepend, separator) for word in replaced]
+    fused.extend(replaced[1:])  # uniquely replaced strings
     return fused
 
-def fuse_np_lp(transformed, postpend):
-    """given lst:transformed, lst:postpend returns a lst:fused
-    fuses postpends onto the transformed strings and returns lst:fused
-    fnct name short hand for 'fuse no pre list post'
+# add separator
+def fuse_no_prepend_list_postpend(replaced: list, postpend: list,
+                                  separator: str='') -> list:
+    """given list:replaced, list:postpend, str:separator,
+    returns a list:fused
+    fuses postpends onto the replaced strings and returns list:fused
 
-    :param transformed: strings with single/multi transform applied
-    :type transformed: list
-    :param postpend: postpends to append on end of each transformed string
+    :param replaced: strings with single/multi transform applied
+    :type replaced: list
+    :param postpend: postpends to append on end of each replaced string
     :type postpend: list, minimum length of 2
+    :param separator: separator between base_word and postpends
+    :type separator: string default of ''
 
     :rtype: list
-    :return: postpends applied, and uniquely transformed strings appended
+    :return: postpends applied, and uniquely replaced strings appended
     """
-    fused = [post_str(word, post) for post in postpend for word in transformed]
-    # uniquely transformed strings not including base string
-    fused.extend(transformed[1:])
+    fused = [postpend_str(word, post, separator) for post in postpend for word in\
+             replaced]  # apply postpends for each word
+    fused.extend(replaced[1:])  # uniquely replaced strings
     return fused
 
-def fuse_np_sp(transformed, postpend):
-    """given lst:transformed, str:postpend returns a lst:fused
-    fuses postpend onto the transformed strings and returns lst:fused
-    fnct name short hand for 'fuse no pre str post'
+# changed name
+def fuse_no_prepend_str_postpend(replaced: list, postpend: str,
+                                 separator: str='') -> list:
+    """given list:replaced, str:postpend, str:separator returns a list:fused
+    fuses postpend onto the replaced strings and returns list:fused
 
-    :param transformed: strings with single/multi transform applied
-    :type transformed: list
-    :param postpend: postpend to append on end of each transformed string
+    :param replaced: strings with single/multi transform applied
+    :type replaced: list
+    :param postpend: postpend to append on end of each replaced string
     :type postpend: string
+    :param separator: separator between base_word and postpend
+    :type separator: string default of ''
 
     :rtype: list
-    :return: postpend applied, and uniquely transformed strings appended
+    :return: postpend applied, and uniquely replaced strings appended
     """
-    fused = [post_str(word, postpend) for word in transformed]
-    # uniquely transformed strings not including base string
-    fused.extend(transformed[1:])
+    fused = [postpend_str(word, postpend, separator) for word in replaced]
+    fused.extend(replaced[1:])  # uniquely replaced strings
     return fused
