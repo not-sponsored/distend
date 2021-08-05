@@ -3,7 +3,7 @@
 
 ![](https://github.com/not-sponsored/distend/blob/main/example_usage.gif)
 
-Psst. Hey there kid. I got a free word list generator that makes cracking a breeze. All you have to do is star the repository. Just kidding but the free part is not a joke. Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intel about the person/password in question such as a
+Psst. Hey there kid. I got a free word list generator that makes cracking a breeze. All you have to do is `star` the repository. Just kidding but the free part is not a joke. Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intel about the person/password in question such as a
 
 - Date of birth
 - Mother's maiden name
@@ -90,3 +90,5 @@ Special thanks to [@dbader_org](https://twitter.com/dbader_org) for the readme t
 
 Please refrain from malicious use of the software.
 For full details view the ``LICENSE``.
+
+Don't forget to `star` the repository if you like it.
