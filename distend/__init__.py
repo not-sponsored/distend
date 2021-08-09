@@ -1,4 +1,4 @@
-"""Distend - build small targeted wordlists from an existing wordlist
+"""Distend - build targeted wordlists from an existing wordlist
 
 ---User Guide---
 basic usage:
@@ -56,7 +56,7 @@ information view the LICENSE on the github repository linked above.
 """
 
 # Distend version
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 
 # allow tests to run
 from .modifier import (
