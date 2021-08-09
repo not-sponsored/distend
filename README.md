@@ -3,7 +3,7 @@
 
 ![](https://github.com/not-sponsored/distend/blob/main/example_usage.gif)
 
-Psst. Hey there kid. I got a free word list generator that makes cracking a breeze. All you have to do is `star` the repository. Just kidding but the free part is not a joke. Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intel about the person/password in question such as a
+Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intel about the person/password in question such as a
 
 - Date of birth
 - Mother's maiden name
@@ -19,6 +19,8 @@ Psst. Hey there kid. I got a free word list generator that makes cracking a bree
 Why not combine the generic word list with the extra details for a more targeted list?
 
 If you think that's a good idea, then Distend is for you. It can even implement common leet speak character replacements.
+
+If you think Distend is useful, please `star` the repository.
 
 -----
 ## Installation
