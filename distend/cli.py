@@ -12,8 +12,8 @@ import distend.__init__
 import distend.serializer
 import distend.io_utils
 
-def main(passed_arguments: list=[]) -> None:
-    """generates the wordlist, returns None"""
+def main(passed_arguments: list=[]) -> int:
+    """generates the wordlist, returns an int status code"""
     if not passed_arguments:                          # increases flexibility
         passed_arguments = sys.argv[1:]
     args = parser(passed_arguments)
@@ -112,7 +112,7 @@ def main(passed_arguments: list=[]) -> None:
     return 0
 
 # changed rules_file to configuration_file, -> multi_rule_only replace_multiple
-def parser(args: list):
+def parser(args: list) -> list:
     """parse arguments with lst:args return lst"""
     # get the documentation from the package document string
     distend_doc_str = distend.__init__.__doc__.split('\n')[2:]
