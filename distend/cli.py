@@ -6,11 +6,14 @@ import argparse
 import time
 import os
 import ast
+from typing import TypeVar
 
 # internal distend imports
 import distend.__init__
 import distend.serializer
 import distend.io_utils
+
+Namespace = TypeVar("Namespace")  # parser return type
 
 def main(passed_arguments: list=[]) -> int:
     """generates the wordlist, returns an int status code"""
@@ -112,7 +115,7 @@ def main(passed_arguments: list=[]) -> int:
     return 0
 
 # changed rules_file to configuration_file, -> multi_rule_only replace_multiple
-def parser(args: list) -> list:
+def parser(args: list) -> Namespace:
     """parse arguments with lst:args return lst"""
     # get the documentation from the package document string
     distend_doc_str = distend.__init__.__doc__.split('\n')[2:]
