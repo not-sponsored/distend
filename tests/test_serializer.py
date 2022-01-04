@@ -106,3 +106,6 @@ class TestSerializer(unittest.TestCase):
         prepend, postpend = ('', '')
         fuse = serializer.get_pre_postpend_function(prepend, postpend)
         self.assertIsNone(fuse, "expected none")
+
+if __name__ == '__main__':
+    unittest.main()

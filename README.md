@@ -3,7 +3,7 @@
 
 ![](https://github.com/not-sponsored/distend/blob/main/example_usage.gif)
 
-Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intel about the person/password in question such as a
+Perhaps you have a stubborn hash that refuses to crack under a generic word list. Maybe you have specific intelligence about the person/password in question such as a
 
 - Date of birth
 - Mother's maiden name
@@ -18,9 +18,11 @@ Perhaps you have a stubborn hash that refuses to crack under a generic word list
 
 Why not combine the generic word list with the extra details for a more targeted list?
 
-If you think that's a good idea, then Distend is for you. It can even implement common leet speak character replacements.
+Distend can do that for you. It can even implement common leet speak character replacements.
 
-If you think Distend is useful, please `star` the repository.
+Implemented with generators, Distend is memory efficient even on large word lists, and it may be a faster alternative to brute forcing on certain hash formats.
+
+If you think Distend is useful, please `star` the repository and share the package.
 
 -----
 ## Installation
@@ -39,7 +41,7 @@ cd [your_clone_location]
 pip install .
 ```
 
-Distend is supported on Python 3.6 and above. Also, there are no dependencies, but Distend does use a few standard library packages (included by default with your Python install).
+Distend is supported on Python 3.6 and above. There are no dependencies other than the standard library packages (included by default with your Python install).
 
 -----
 ## Usage
@@ -59,16 +61,23 @@ distend -h
 -----
 ## Development setup
 
-To run the unit tests, navigate to the test directory and run the following
+To run all unit tests, navigate to the test directory and run the following
 
 ```sh
-python3 -m unittest test_modifier.py
-python3 -m unittest test_io_utils.py
-python3 -m unittest test_serializer.py
-python3 -m unittest test_cli.py
+python3 -m unittest
+```
+or
+```sh
+python3 test_all.py
 ```
 
-You may have to visit the repository to get the test files because they are not included with the pip install.
+To run individual tests
+
+```sh
+python3 test_modifier.py
+```
+
+Test files are not included in the pip install, so visit the repository to get the test files.
 
 -----
 ## Meta

@@ -294,3 +294,6 @@ class Testmodifier(unittest.TestCase):
         'does not modify str:prepend correctly')
         self.assertEqual(separator_result, ['test.1974',  '73s7.1974', '73s7'],
         'does not modify prepend with a separator correctly')
+
+if __name__ == '__main__':
+    unittest.main()
